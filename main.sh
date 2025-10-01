@@ -2,26 +2,44 @@
 set -euo pipefail
 
 # =============================
-# Ubuntu 22.04 VM (Auto Setup)
+# VM Setup Script
 # =============================
 
 clear
+
+# ===== Banner =====
 cat << "EOF"
 /$$$$$$$$       /$$     /$$       /$$   /$$       /$$$$$$$$       /$$   /$$
-|_____ $$       |  $$   /$$/      | $$$ | $$      | $$_____/      | $$  / $$
+|_____ $$       |  $$   /$$/      | $$$ | $$      | $$_____/      | $$  / $$  
      /$$/        \  $$ /$$/       | $$$$| $$      | $$            |  $$/ $$/
     /$$/          \  $$$$/        | $$ $$ $$      | $$$$$          \  $$$$/ 
    /$$/            \  $$/         | $$  $$$$      | $$__/           >$$  $$ 
-  /$$/              | $$          | $$\  $$$      | $$             /$$/\  $$
+  /$$/              | $$          | $$\  $$$      | $$             /$$/\  $$  
  /$$$$$$$$          | $$          | $$ \  $$      | $$$$$$$$      | $$  \ $$ 
 |________/          |__/          |__/  \__/      |________/      |__/  |__/
 
                      POWERED BY ZYNEZ
 EOF
 
-# =============================
-# Configurable Variables
-# =============================
+# ===== Subscription Animation =====
+GRN='\033[0;32m'
+CYN='\033[0;36m'
+NC='\033[0m'
+
+echo -e "${GRN}🔥 Please Subscribe \n${NC}"
+
+for i in {1..3}; do
+  echo -ne "${CYN}Subscribing To Zynez"
+  for dot in {1..3}; do
+    echo -n "."
+    sleep 0.3
+  done
+  echo -ne "\r\033[K"
+done
+echo -e "${GRN}✅ Thanks for Subscribing to Zynez!${NC}\n"
+sleep 1
+
+# ===== VM Config =====
 VM_DIR="$HOME/vm"
 IMG_FILE="$VM_DIR/ubuntu-cloud.img"
 SEED_FILE="$VM_DIR/seed.iso"
@@ -33,15 +51,24 @@ DISK_SIZE=100G
 mkdir -p "$VM_DIR"
 cd "$VM_DIR"
 
-# =============================
-# VM Image Setup
-# =============================
+# ===== Dependency Check =====
+DEPS=(qemu-system-x86_64 cloud-localds wget)
+for cmd in "${DEPS[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+        echo "[INFO] $cmd not found. Installing..."
+        sudo apt update -y
+        sudo apt install -y qemu qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils cloud-image-utils wget
+        break
+    fi
+done
+
+# ===== VM Image Setup =====
 if [ ! -f "$IMG_FILE" ]; then
-    echo "[INFO] VM image not found, creating new VM..."
+    echo "[INFO] VM image not found, downloading..."
     wget -q https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img -O "$IMG_FILE"
     qemu-img resize "$IMG_FILE" "$DISK_SIZE"
 
-    # Cloud-init config with hostname = Zynez
+    # Cloud-init config
     cat > user-data <<EOF
 #cloud-config
 hostname: Zynez
@@ -52,16 +79,6 @@ chpasswd:
   list: |
     root:root
   expire: false
-growpart:
-  mode: auto
-  devices: ["/"]
-  ignore_growroot_disabled: false
-resize_rootfs: true
-runcmd:
- - growpart /dev/vda 1 || true
- - resize2fs /dev/vda1 || true
- - sed -ri "s/^#?PermitRootLogin.*/PermitRootLogin yes/" /etc/ssh/sshd_config
- - systemctl restart ssh
 EOF
 
     cat > meta-data <<EOF
@@ -72,12 +89,10 @@ EOF
     cloud-localds "$SEED_FILE" user-data meta-data
     echo "[INFO] VM setup complete!"
 else
-    echo "[INFO] VM image found, skipping setup..."
+    echo "[INFO] VM image exists, skipping download..."
 fi
 
-# =============================
-# Start VM
-# =============================
+# ===== Start VM =====
 echo "[INFO] Starting VM..."
 exec qemu-system-x86_64 \
     -enable-kvm \
