@@ -37,3 +37,14 @@ done
 
 echo -e "${GRN}✅ Thanks for Subscribing to Zynez! If Not, Do It Now 🚀${NC}\n"
 sleep 1
+
+
+# Install fastfetch
+echo "Installing fastfetch..."
+wget https://github.com/fastfetch-cli/fastfetch/releases/download/2.32.1/fastfetch-linux-amd64.deb && apt install ./fastfetch-linux-amd64.deb
+
+# Run Neofetch to display system information
+echo "Running fastfetch..."
+fastfetch
+
+echo "All tasks completed successfully!"
