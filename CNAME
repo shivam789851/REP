@@ -1,1 +1,39 @@
-vps.notk.qzz.io
+#!/bin/bash
+
+clear
+
+# Colors
+RED='\033[0;31m'
+GRN='\033[0;32m'
+CYN='\033[0;36m'
+YEL='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Banner
+echo -e "${YEL}"
+cat << "EOF"
+ /$$$$$$$$       /$$     /$$       /$$   /$$       /$$$$$$$$       /$$   /$$
+|_____ $$       |  $$   /$$/      | $$$ | $$      | $$_____/      | $$  / $$
+     /$$/        \  $$ /$$/       | $$$$| $$      | $$            |  $$/ $$/
+    /$$/          \  $$$$/        | $$ $$ $$      | $$$$$          \  $$$$/ 
+   /$$/            \  $$/         | $$  $$$$      | $$__/           >$$  $$ 
+  /$$/              | $$          | $$\  $$$      | $$             /$$/\  $$
+ /$$$$$$$$          | $$          | $$ \  $$      | $$$$$$$$      | $$  \ $$
+|________/          |__/          |__/  \__/      |________/      |__/  |__/
+EOF
+echo -e "${NC}"
+
+# Subscription Prompt
+echo -e "${GRN}🔥 Please Subscribe \n${NC}"
+
+for i in {1..3}; do
+  echo -ne "${CYN}Subscribing To Zynez"
+  for dot in {1..3}; do
+    echo -n "."
+    sleep 0.3
+  done
+  echo -ne "\r\033[K"  # Clear line for smooth animation
+done
+
+echo -e "${GRN}✅ Thanks for Subscribing to Zynez! If Not, Do It Now 🚀${NC}\n"
+sleep 1
