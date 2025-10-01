@@ -27,7 +27,7 @@ echo -e "${NC}"
 echo -e "${GRN}🔥 Please Subscribe \n${NC}"
 
 for i in {1..3}; do
-  echo -ne "${CYN}Subscribing To MrdraynoX"
+  echo -ne "${CYN}Subscribing To ZYnexCode"
   for dot in {1..3}; do
     echo -n "."
     sleep 0.3
@@ -131,3 +131,4 @@ echo -e "${GRN}X-> Creating Admin User...${NC}"
 docker-compose run --rm panel php artisan p:user:make
 
 echo -e "${YEL}✅ Panel is installed! Enjoy now${NC}"
+
