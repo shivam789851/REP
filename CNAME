@@ -37,6 +37,7 @@ done
 
 echo -e "${GRN}✅ Thanks for Subscribing to Zynez! If Not, Do It Now 🚀${NC}\n"
 sleep 1
+#!/bin/bash
 
 
 # Install fastfetch
